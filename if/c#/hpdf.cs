@@ -943,7 +943,7 @@ public class HPdfPage{
 
     [DllImport("libhpdf.dll")]
     private extern static uint HPDF_Page_MeasureText(IntPtr page,
-        string text, float width, int wordwrap, ref float real_width);
+        string text, float width, int wordwrap, out float real_width);
 
     [DllImport("libhpdf.dll")]
     private extern static float HPDF_Page_GetWidth(IntPtr page);
@@ -1261,7 +1261,7 @@ public class HPdfPage{
     [DllImport("libhpdf.dll")]
     private extern static uint HPDF_Page_TextRect(IntPtr page,
                 float left, float top, float right, float bottom,
-                string text, HPdfTextAlignment align, ref uint len);
+                string text, HPdfTextAlignment align, out uint len);
 
     [DllImport("libhpdf.dll")]
     private extern static uint HPDF_Page_TextRect(IntPtr page,
@@ -1336,7 +1336,7 @@ public class HPdfPage{
     }
 
     public uint MeasureText(string text, float width, bool wordwrap,
-                ref float real_width) {
+                out float real_width) {
         int ww;
 
         if (wordwrap)
@@ -1344,11 +1344,11 @@ public class HPdfPage{
         else
             ww = HPDF_FALSE;
 
-        return HPDF_Page_MeasureText(hpage, text, width, ww, ref real_width);
+        return HPDF_Page_MeasureText(hpage, text, width, ww, out real_width);
     }
 
     public uint MeasureText(string text, float width, bool wordwrap) {
-        float dummy = 0;
+        float dummy;
         int ww;
 
         if (wordwrap)
@@ -1356,7 +1356,7 @@ public class HPdfPage{
         else
             ww = HPDF_FALSE;
 
-        return HPDF_Page_MeasureText(hpage, text, width, ww, ref dummy);
+        return HPDF_Page_MeasureText(hpage, text, width, ww, out dummy);
     }
 
     public float GetWidth() {
@@ -1741,8 +1741,9 @@ public class HPdfPage{
 
     public void TextRect(float left, float top, float right,
                 float bottom, string text, HPdfTextAlignment align,
-                ref uint len) {
-        HPDF_Page_TextRect(hpage, left, top, right, bottom, text, align, ref len);
+                out uint len) {
+        HPDF_Page_TextRect(hpage, left, top, right, bottom, text, align, out len);
+    }
 
     public void TextRect(float left, float top, float right,
                 float bottom, string text, HPdfTextAlignment align) {
@@ -1793,7 +1794,7 @@ public class HPdfFont {
     private extern static uint HPDF_Font_MeasureText(IntPtr hfont,
             string text, uint len, float width, float font_size,
             float char_space, float word_space, int wordwrap,
-            ref float real_width);
+            out float real_width);
 
 
     IntPtr hfont;
@@ -1848,10 +1849,10 @@ public class HPdfFont {
 
     public uint MeasureText(string text, uint len, float width,
             float font_size, float char_space, float word_space,
-            int wordwrap, ref float real_width) {
+            int wordwrap, out float real_width) {
         return HPDF_Font_MeasureText(hfont, text, len, width, font_size,
             char_space, word_space, wordwrap,
-            ref real_width);
+            out real_width);
     }
 }
 
