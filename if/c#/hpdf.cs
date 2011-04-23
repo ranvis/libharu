@@ -314,6 +314,11 @@ public struct HPdfCMYKColor {
 public delegate void HPDF_ErrorHandler(uint error_no, uint detail_no,
         IntPtr user_data);
 
+public class HPdfException : Exception {
+    public HPdfException(string message): base (message) {
+    }
+}
+
 public class HPdfDoc: IDisposable {
     public const int HPDF_TRUE = 1;
     public const int HPDF_FALSE = 0;
@@ -547,7 +552,7 @@ public class HPdfDoc: IDisposable {
                 new HPDF_ErrorHandler(HPdfDoc.ErrorProc);
         hpdf = HPDF_New(error_handler, IntPtr.Zero);
         if (hpdf == IntPtr.Zero) {
-            throw new Exception("cannot create HPdfDoc object.");
+            throw new HPdfException("cannot create HPdfDoc object.");
         }
     }
 
@@ -572,7 +577,7 @@ public class HPdfDoc: IDisposable {
     public static void ErrorProc(uint error_no, uint detail_no,
             IntPtr user_data) {
         string s = "error-code=0x" + error_no.ToString("X") + " detail-code=" + detail_no;
-        throw new Exception(s);
+        throw new HPdfException(s);
     }
 
     public void NewDoc() {
@@ -858,7 +863,7 @@ public class HPdfDoc: IDisposable {
                     HPdfColorSpace color_space, uint bits_per_component) {
         if (width * height < data.Length) {
             string s = "error-code=0x1030 detail-code=0";
-            throw new Exception(s);
+            throw new HPdfException(s);
         }
         IntPtr hobj;
 
@@ -1278,7 +1283,7 @@ public class HPdfPage{
 
     public HPdfPage(IntPtr hpage) {
         if (hpage == IntPtr.Zero) {
-            throw new Exception("cannot create HPdfPage object.");
+            throw new HPdfException("cannot create HPdfPage object.");
         }
 
         this.hpage = hpage;
@@ -1801,7 +1806,7 @@ public class HPdfFont {
 
     public HPdfFont(IntPtr hfont) {
         if (hfont == IntPtr.Zero) {
-            throw new Exception("cannot create HPdfFont object.");
+            throw new HPdfException("cannot create HPdfFont object.");
         }
 
         this.hfont = hfont;
@@ -1869,7 +1874,7 @@ public class HPdfOutline {
 
     public HPdfOutline(IntPtr houtline) {
         if (houtline == IntPtr.Zero) {
-            throw new Exception("cannot create HPdfOutline object.");
+            throw new HPdfException("cannot create HPdfOutline object.");
         }
 
         this.houtline = houtline;
@@ -1900,7 +1905,7 @@ public class HPdfEncoder {
 
     public HPdfEncoder(IntPtr hencoder) {
         if (hencoder == IntPtr.Zero) {
-            throw new Exception("cannot create HPdfEncoder object.");
+            throw new HPdfException("cannot create HPdfEncoder object.");
         }
 
         this.hencoder = hencoder;
@@ -1980,7 +1985,7 @@ public class HPdfDestination {
 
     public HPdfDestination(IntPtr hdest) {
         if (hdest == IntPtr.Zero) {
-            throw new Exception("cannot create HPdfDestination object.");
+            throw new HPdfException("cannot create HPdfDestination object.");
         }
 
         this.hdest = hdest;
@@ -2045,7 +2050,7 @@ public class HPdfAnnotation {
 
     public HPdfAnnotation(IntPtr hannot) {
         if (hannot == IntPtr.Zero) {
-            throw new Exception("cannot create HPdfAnnotation object.");
+            throw new HPdfException("cannot create HPdfAnnotation object.");
         }
 
         this.hannot = hannot;
@@ -2085,7 +2090,7 @@ public class HPdfXObject {
 
     public HPdfXObject(IntPtr hobj) {
         if (hobj == IntPtr.Zero) {
-            throw new Exception("cannot create HPdfImage object.");
+            throw new HPdfException("cannot create HPdfImage object.");
         }
 
         this.hobj = hobj;
@@ -2172,7 +2177,7 @@ public class HPdfExtGState {
 
     public HPdfExtGState(IntPtr hgstate) {
         if (hgstate == IntPtr.Zero) {
-            throw new Exception("cannot create HPdfImage object.");
+            throw new HPdfException("cannot create HPdfImage object.");
         }
 
         this.hgstate = hgstate;
