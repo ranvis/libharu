@@ -359,6 +359,21 @@ public class HPdfDoc: IDisposable {
     private extern static uint HPDF_HasDoc(IntPtr pdf);
 
     [DllImport("libhpdf.dll")]
+    private extern static uint HPDF_SaveToStream(IntPtr pdf);
+
+    [DllImport("libhpdf.dll")]
+    private extern static uint HPDF_GetContents(IntPtr pdf, [Out] byte[] buf, out uint size);
+
+    [DllImport("libhpdf.dll")]
+    private extern static uint HPDF_GetStreamSize(IntPtr pdf);
+
+    [DllImport("libhpdf.dll")]
+    private extern static uint HPDF_ReadFromStream(IntPtr pdf, [Out] byte[] buf, ref uint size);
+
+    [DllImport("libhpdf.dll")]
+    private extern static uint HPDF_ResetStream(IntPtr pdf);
+
+    [DllImport("libhpdf.dll")]
     private extern static uint HPDF_SaveToFile(IntPtr pdf, string file_name);
 
     [DllImport("libhpdf.dll")]
@@ -574,6 +589,35 @@ public class HPdfDoc: IDisposable {
 
     public bool HasDoc() {
         return (HPDF_HasDoc(hpdf) != 0);
+    }
+
+    public void SaveToStream() {
+        HPDF_SaveToStream(hpdf);
+    }
+
+    public byte[] GetContents() {
+        SaveToStream();
+        uint size = GetStreamSize();
+        byte[] buf = new byte[size];
+        ReadFromStream(ref buf);
+        return buf;
+    }
+
+    public uint GetStreamSize() {
+        return HPDF_GetStreamSize(hpdf);
+    }
+
+    public uint ReadFromStream(ref byte[] buf, uint size) {
+        HPDF_ReadFromStream(hpdf, buf, ref size);
+        return size;
+    }
+
+    public uint ReadFromStream(ref byte[] buf) {
+        return ReadFromStream(ref buf, (uint)buf.Length);
+    }
+
+    public void ResetStream() {
+        HPDF_ResetStream(hpdf);
     }
 
     public void SaveToFile(string file_name) {
