@@ -1220,6 +1220,11 @@ public class HPdfPage{
                 string text, HPdfTextAlignment align, ref uint len);
 
     [DllImport("libhpdf.dll")]
+    private extern static uint HPDF_Page_TextRect(IntPtr page,
+                float left, float top, float right, float bottom,
+                string text, HPdfTextAlignment align, UIntPtr len);
+
+    [DllImport("libhpdf.dll")]
     private extern static uint HPDF_Page_SetSlideShow(IntPtr page,
                 HPdfTransitionStyle type, float disp_time, float trans_time);
 
@@ -1694,6 +1699,10 @@ public class HPdfPage{
                 float bottom, string text, HPdfTextAlignment align,
                 ref uint len) {
         HPDF_Page_TextRect(hpage, left, top, right, bottom, text, align, ref len);
+
+    public void TextRect(float left, float top, float right,
+                float bottom, string text, HPdfTextAlignment align) {
+        HPDF_Page_TextRect(hpage, left, top, right, bottom, text, align, UIntPtr.Zero);
     }
 
     public void SetSlideShow(HPdfTransitionStyle type, float disp_time,
